@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{useEffect,useState} from "react";
 import'./main.scss';
 import img from '../../Assets/img (1).jpg'
 import img2 from '../../Assets/img (2).jpg'
@@ -14,7 +14,22 @@ import { HiOutlineLocationMarker,HiOutlineClipboardCheck } from "react-icons/hi"
 
 import Aos from "aos"
 import 'aos/dist/aos.css'
+/*
+const  [location,setId]=useState([]);
+const [searchfield , setsearchfield] = useState('');
+useEffect(()=>{
+  location=setId(Data.Id)    },[]
 
+);
+const onsearchchange =  (event)=>{
+const searchfield = event.target.value.toLowerCase();
+
+    setsearchfield(searchfield);
+}
+
+const filteredLocations= Location.filter((mon)=>{
+return mon.name.toLowerCase().includes(searchfield);
+});*/
 
 
   
@@ -103,73 +118,64 @@ const Data = [
       description: 'Bali is an indonesian island and one of the best holiday destination in the Indonesian archipelago. Bali is known for its volcanic mountains, history, art and culture, food, temples and beautiful sandy beaches. '
     },
   ]
-const Main = ()=>{
-  useEffect(()=>{
-    Aos.init({duration: 2000})
-  }, [])
-    return(
-        <section className="main cobtainer section">
-
-            <div className="secTitle">
-                <h3 data-aos="fade-right" className="title">
-                Most Visited Destinations
-                </h3>
-            </div>
-            <div className="setContent grid">
-              {
-                Data.map(({id,imgSrc,destTitle,location,grade,fees,description})=>{
-                
-                return(
-                 <div key={id}  data-aos="fade-up" className="singleDestination">
-                  <div className="imageDiv">
-                  <img src={imgSrc} alt={destTitle}/>
-                  </div>
-                  <div className="cardInfo">
-                  <h4 className="destTitle">
-                    {destTitle}
-                  </h4>
-                  <span className="continent flex">
+  const Main = () => {
+    useEffect(() => {
+      Aos.init({ duration: 2000 });
+    }, []);
+  
+    // Function to toggle visibility of description
+    const [activeId, setActiveId] = useState(null);
+  
+    const toggleDescription = (id) => {
+      setActiveId(activeId === id ? null : id); // Toggle visibility
+    };
+  
+    return (
+      <section className="main container section">
+        <div className="secTitle">
+          <h3 data-aos="fade-right" className="title">
+            Most Visited Destinations
+          </h3>
+        </div>
+        <div className="setContent grid">
+          {Data.map(({ id, imgSrc, destTitle, location, grade, fees, description }) => (
+            <div key={id} data-aos="fade-up" className="singleDestination">
+              <div className="imageDiv">
+                <img src={imgSrc} alt={destTitle} />
+              </div>
+              <div className="cardInfo">
+                <h4 className="destTitle">{destTitle}</h4>
+                <span className="continent flex">
                   <HiOutlineLocationMarker className="icon" />
                   <span className="name">{location}</span>
-                  </span>
-                  <div className="fees flex">
+                </span>
+                <div className="fees flex">
                   <div className="grade">
-                    <span>{grade}<small>
-                        +1
-                      </small></span>
+                    <span>{grade}<small> +1</small></span>
                   </div>
                   <div className="price">
-                    <h5>
-                      {fees}
-                    </h5>
-
+                    <h5>{fees}</h5>
                   </div>
+                </div>
+                {/* Conditionally render description */}
+                {activeId === id && (
+                  <div className="desc">
+                    <p>{description}</p>
                   </div>
-                  
-                 <div className="desc">
-                  <p>{description}
-
-                  </p></div> 
-                  <button className="btn flex">DETAILS
+                )}
+                <button
+                  className="btn flex"
+                  onClick={() => toggleDescription(id)}
+                >
+                  DETAILS
                   <HiOutlineClipboardCheck className="icon" />
-                  </button>
-                  </div>
-
-                 </div> 
-                
-                )
-
-                })
-              }
-
+                </button>
+              </div>
             </div>
-
-
-
-
-
-
-            </section>
-    )
-}
-export default Main;
+          ))}
+        </div>
+      </section>
+    );
+  };
+  
+  export default Main;
